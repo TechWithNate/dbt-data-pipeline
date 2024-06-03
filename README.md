@@ -15,12 +15,12 @@ A dbt data pipeline capstone project.
 ---
 
 ## Technologies
- ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+ ![Apache Airflow](https://img.shields.io/badge/Apache%20Airflow-017CEE?style=for-the-badge&logo=Apache%20Airflow&logoColor=white)
  ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
- ![Pandas](https://img.shields.io/badge/pandas-%23150458.svg?style=for-the-badge&logo=pandas&logoColor=white)
- ![Jupyter Notebook](https://img.shields.io/badge/jupyter-%23FA0F00.svg?style=for-the-badge&logo=jupyter&logoColor=white)
- ![Amazon AWS](https://a11ybadges.com/badge?logo=amazonaws)
- ![Amazon S3](https://a11ybadges.com/badge?logo=amazons3)
+ ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)
+ ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+ ![Snowflake](https://a11ybadges.com/badge?logo=snowflake)
+ ![dbt](https://a11ybadges.com/badge?logo=dbt)
 
  ---
 
@@ -34,41 +34,64 @@ In addition, process data can then be used for visual analytics.
 ---
 
 ## Conceptual architecture
-![image](https://github.com/TechWithNate/Yahoo-finances-data-event/assets/81887567/f8dd1f32-5ed4-4513-8ed9-79895f80ba7c)
 
-
+```bash
+           +-------------------------+
+           |   External Data Source  |
+           +-------------------------+
+                      |
+                      V
+           +-------------------------+
+           |       Snowflake         |
+           |      Data Warehouse     |
+           +-------------------------+
+                      |
+                      V
++------------------------------------------------------+
+|                  ELT Pipeline (Airflow)              |
+|                                                      |
+|               +--------------+     +------------+    |
+|               |    Extract   | --> |    Load    |    |
+|               +--------------+     +------------+    |
+|                        |                     |        |
+|                        V                     V        |
+|               +--------------+     +------------+    |
+|               |   Transform  |     | dbt Models |    |
+|               +--------------+     +------------+    |
++------------------------------------------------------+
+```
+  
 ---
 
 ## Conceptual Report on the Technologies used
-### Pros and Cons of AWS Redshift
-AWS Redshift is a fully managed data warehouse service designed to handle large-scale data analytics. It is commonly used in data pipelines for processing and analyzing large volumes of data. Below are the pros and cons of using AWS Redshift in a data pipeline:
+### dbt (Data Build Tool)
+Definition: dbt (data build tool) is an open-source command-line tool that enables data analysts and engineers to transform data in their warehouses more effectively. It allows users to write modular, SQL-based transformation logic in the form of "models" and run these transformations against their data warehouse.
 
 | Pros | Cons |
 | --- | --- |
-|Redshift can handle petabyte-scale data warehouses. It allows you to start small and scale out by adding more nodes as your data grows.  | While Redshift can be cost-effective, it can become expensive for very large data volumes or high-frequency queries, especially if concurrency scaling is frequently used.|
-| Redshift uses columnar storage and data compression to improve query performance. Its massively parallel processing (MPP) architecture distributes queries across multiple nodes, enhancing performance for complex queries | Redshift is optimized for batch processing rather than real-time analytics. It may not be the best choice for applications requiring real-time data processing and low-latency queries |
-|Redshift integrates seamlessly with other AWS services like S3, Kinesis, Glue, and Data Pipeline. This makes it easier to build comprehensive data pipelines within the AWS ecosystem| Managing and optimizing Redshift can be complex, requiring a good understanding of its architecture, query performance tuning, and best practices for data distribution and sorting keys | Redshift can automatically add more compute capacity to handle high demand for concurrent queries, ensuring consistent performance | If using Redshift Spectrum (which allows querying data directly from S3), queries on infrequently accessed data can have higher latency due to `cold starts` |
-
-**Conclusion**
-
-AWS Redshift is a powerful data warehousing solution that excels in handling large-scale data analytics with high performance and integration capabilities within the AWS ecosystem. However, due to the requirements of this project, AWS Redshift was suitable for use.
+| **SQL-based:** Allows analysts to write transformations using familiar SQL syntax. | **Customization:** Increased customization for incremental models to support larger data sets |
+| **Modular:** Encourages the creation of modular, reusable transformation logic. | **Learning Curve:** Requires knowledge of SQL and familiarity with dbt concepts. |
+| **Testing:** Provides built-in testing capabilities to ensure data quality and correctness. | **Dependency Management:** Managing dependencies between models can become complex in larger projects. |
 
 ---
-### Pros and Cons of using AWS RDS
-Amazon RDS (Relational Database Service) is a managed relational database service that supports multiple database engines such as MySQL, PostgreSQL, Oracle, SQL Server, and MariaDB. It is often used in data pipelines for transactional data processing, operational databases, and as a component in ETL processes. Below are the pros and cons of using Amazon RDS in a data pipeline:
+### Snowflake
+Snowflake is a cloud-based data warehousing platform that provides a fully managed service for storing, analyzing, and processing large volumes of data. It offers features such as elastic scaling, separation of storage and compute, and support for structured and semi-structured data.
 
 | Pros | Cons |
 | --- | --- |
-| RDS handles routine database tasks such as provisioning, patching, backup, recovery, and failure detection. This reduces the operational burden on your team| Managed services like RDS can be more expensive than self-managed databases, especially for large-scale deployments or when using high-end instance types. Costs can also escalate with additional features like Multi-AZ, read replicas, and high storage IOPS.|
-| RDS supports several popular database engines (MySQL, PostgreSQL, Oracle, SQL Server, MariaDB), allowing you to choose the one that best fits your application's requirements| While RDS offers many configuration options, it doesn't provide as much control over the database environment as a self-managed database. Certain custom configurations and extensions might not be supported. | RDS allows for easy vertical scaling (increasing instance size) and read scaling through read replicas, enabling you to handle increased load without significant downtime. | RDS requires maintenance windows for certain operations such as patching and upgrades. These maintenance periods can lead to temporary downtime or performance degradation. | RDS integrates with AWS IAM for fine-grained access control and supports encryption at rest and in transit. It also allows deployment within a VPC for network isolation.| The abstraction layer of managed services may introduce performance overhead compared to self-managed databases optimized specifically for your workloads. |
+| Handles infrastructure management, optimization, and tuning, allowing users to focus on data analysis. | Pricing can be higher compared to self-managed solutions, especially for large workloads. |
+| Supports JSON, Avro, Parquet, and other semi-structured data formats. | Managing data pipelines and access controls can be complex in larger deployments. |
+|  Allows users to scale compute independently of storage, providing cost efficiency. | Being a cloud-specific service, migrating away from Snowflake can be challenging. | 
 
-***Conclusion***
-
-Amazon RDS offers a robust and reliable managed database service that simplifies many aspects of database management, making it an attractive choice for data pipelines that require relational database capabilities. Its high availability, security features, and ease of integration with other AWS services are significant advantages. However, its costs, limited customization options, and certain scaling limitations may pose challenges for some use cases.
+### Airflow (Apache Airflow)
+Apache Airflow is an open-source workflow orchestration tool used for scheduling, monitoring, and managing complex data pipelines. It allows users to define workflows as directed acyclic graphs (DAGs) and execute tasks in a distributed and fault-tolerant manner.
+| Pros | Cons |
+| --- | --- |
+| Enables the creation and management of complex data pipelines as DAGs. | Setting up and configuring Airflow can be complex, especially for beginners. |
+| Provides built-in monitoring and alerting capabilities to track pipeline progress and detect failures. | Requires resources for running the Airflow scheduler, web server, and worker nodes. |
+| Supports dynamic DAG generation based on runtime parameters and conditions. | Users need to learn Airflow concepts such as DAGs, operators, sensors, and hooks. |
 
 ---
-## Data Source
-Data for this project was generated from yahoo finances official website using this [link](https://finance.yahoo.com/quote/BTC-USD/history). This produces a historic data of crypto currencies that can be streamed or generated in batches.
 
 ## Project Setup
 ### Step 1: Create a snowflake account and setup snowflake environment
@@ -101,7 +124,7 @@ drop role if exists dbt_role;
 ```
 ### Step 2. Clone the repository
 ```bash
-git clone 
+git clone https://github.com/TechWithNate/dbt-data-pipeline
 ```
 ### Step 3. Install the requirements 
 Open your terminal and run the command
