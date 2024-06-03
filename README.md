@@ -8,8 +8,7 @@ A dbt data pipeline capstone project.
   <a href="#about-the-project">About the project</a> •
   <a href="#conceptual-architecture">Conceptual architecture</a> •
   <a href="#conceptual-report-on-the-technologies-used">Conceptual Report on the Technologies used</a> •
-  <a href="#project-setup">Project Set up</a> •
-  <a href="#🛠️-setup">Setup</a> 
+  <a href="#project-setup">Project Set up</a>
 </p>
 
 ---
