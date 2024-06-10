@@ -13,12 +13,12 @@ profile_config = ProfileConfig(
 )
 
 dbt_snowflake_dag = DbtDag(
-    ProjectConfig = ProjectConfig("/users/local/airflow/dags/dbt/data_pipeline",),
+    project_config=ProjectConfig("/usr/local/airflow/dags/dbt/dbt_data_pipeline"),
     operator_args={"install_deps": True},
-    profile_config = profile_config,
-    execution_config = ExecutionConfig(dbt_executable_path=f"{os.environ.get("Aireflowhome", "/users/local/bin/dbt")}"),
-    schedule_interval = "@daily",
-    start_date = datetime(2023, 9, 10),
-    catchup = False,
-    dag_id = "dbt_dag",
+    profile_config=profile_config,
+    execution_config=ExecutionConfig(dbt_executable_path=f"{os.environ.get('AIRFLOW_HOME')}/dbt_venv/bin/dbt"),
+    schedule_interval="@daily",
+    start_date=datetime(2023, 9, 10),
+    catchup=False,
+    dag_id="dbt_dag",
 )
