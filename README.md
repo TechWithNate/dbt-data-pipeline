@@ -91,6 +91,10 @@ Apache Airflow is an open-source workflow orchestration tool used for scheduling
 | Supports dynamic DAG generation based on runtime parameters and conditions. | Users need to learn Airflow concepts such as DAGs, operators, sensors, and hooks. |
 
 ---
+## Airflow Graphs
+![image](https://github.com/TechWithNate/dbt-data-pipeline/assets/81887567/7872ef38-352c-42d0-b414-dd38069b1b51)
+
+![image](https://github.com/TechWithNate/dbt-data-pipeline/assets/81887567/e4de9a90-30e2-4758-a728-b08b50eb2e72)
 
 ## Project Setup
 ### Step 1: Create a snowflake account and setup snowflake environment
@@ -130,6 +134,4 @@ Open your terminal and run the command
 ```bash
 pip install -r requirements.txt
 ```
-
-![image](https://github.com/TechWithNate/dbt-data-pipeline/assets/81887567/7872ef38-352c-42d0-b414-dd38069b1b51)
 
