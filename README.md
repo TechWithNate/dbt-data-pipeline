@@ -130,3 +130,6 @@ Open your terminal and run the command
 ```bash
 pip install -r requirements.txt
 ```
+
+![image](https://github.com/TechWithNate/dbt-data-pipeline/assets/81887567/7872ef38-352c-42d0-b414-dd38069b1b51)
+
